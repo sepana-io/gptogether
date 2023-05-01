@@ -1,0 +1,78 @@
+image: docker:19.03.8
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  DOCKER_DRIVER: overlay
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  STAGING_KUBE_CONTEXT: "teza-ai/centralized-search/staging-pipeline-config:qasearch"
+  KUBE_CONTEXT: "teza-ai/centralized-search/setup-scripts:csearch"
+
+services:
+  - name: docker:19.03.8-dind
+
+stages:
+  - build
+  - release
+  - deploy
+
+before_script:
+  - docker info
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build_image:
+  tags:
+    - kubernetes
+  stage: build
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  script:
+    - docker build -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
+
+push_container:
+  tags:
+    - kubernetes
+  stage: release
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+  only:
+    - master
+
+.utils: &utils |
+  function install_dependencies() {
+    apk add gettext
+  }
+
+  function deploy() {    
+    kubectl apply -f deployment.yaml
+    kubectl rollout restart deployment gptogether-frontend -n gitlab-managed-apps
+  }
+
+  # The K8S config variables should be passed as CI env variables
+  function setup_kubectl() {
+    kubectl config use-context "$STAGING_KUBE_CONTEXT" --user=gitlab
+  }
+
+  function stop_application() {
+    kubectl delete -f deployment.yml
+  }
+
+deploy:
+  tags:
+    - kubernetes
+  stage: deploy
+  image: dtzar/helm-kubectl:3.4.0
+  before_script:
+    - *utils
+  script:
+    - echo "The deployment is created/applied in this step"
+    - install_dependencies
+    - setup_kubectl
+    - deploy
+  environment:
+    name: $CI_COMMIT_REF_SLUG
+  only:
+    - master

@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gptogether-frontend
+  labels:
+    app: gptogether-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gptogether-frontend
+  template:
+    metadata:
+      labels:
+        app: gptogether-frontend
+    spec:
+      containers:
+        - name: gptogether-frontend
+          image: registry.gitlab.com/teza-ai/hackathon2k23/gptogether/frontend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: in
+          env:
+            - name: CONFIG_MODE
+              value: "Production"
+            - name: NEXT_PUBLIC_FIREBASE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sepana
+                  key: firebase.api.key
+            - name: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: sepana
+                  key: firebase.auth.domain
+            - name: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: sepana
+                  key: firebase.project.id
+            - name: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: sepana
+                  key: firebase.storage.bucket
+            - name: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: sepana
+                  key: firebase.messaging.sender.id
+            - name: NEXT_PUBLIC_FIREBASE_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: sepana
+                  key: firebase.app.id
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gptogether-frontend
+spec:
+  selector:
+    app: gptogether-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gptogether-frontend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gptogether-frontend
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 300
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageValue: 300
