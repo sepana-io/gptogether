@@ -17,7 +17,6 @@ To get started with GPTogether, follow the steps below:
 
 ```
 git clone https://github.com/sepana-io/gptogether
-cd gptogether-frontend
 ```
 
 - [ ] Go to frontend folder
