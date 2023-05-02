@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Find users by prompts</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='scavenger.png') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+
+    <script type="text/javascript">
+        window.onload = function() {
+            let obj = document.getElementById('submit');
+            obj.onclick = function() {
+                let form = document.getElementById('form');
+                if (form.checkValidity()) {
+                    obj.classList.add('loading');
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Find users by prompts</h1>
+
+    <form id='form' action="/prompts_users" method="post">
+        <div class="hor" >
+            <textarea rows="8" cols="80" id='query' name="query" class="wide" placeholder="Who won the last FIFA world cup?" required>{{query}}</textarea>
+            <label class="mar"></label>
+        </div>
+
+        <input id='submit' type="submit" value="Find users by prompts" />
+    </form>
+
+    <div class="result">
+        {% if rows %}
+        <span class="small">Similar users to prompts above:</span>
+        {% for row in rows %}
+        <p>{{row.get('user_name')}} :: {{row.get('prompt_subject')}}
+            <br>
+            <span class='small'>{{'<br>'.join(row.get('sample_prompts'))|safe}}</span>
+            <span class='small'><br>(score: {{row.get('score')|round(3)}})</span></p>
+        <br>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</body>

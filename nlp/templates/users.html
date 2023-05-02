@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Similar Users</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='scavenger.png') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+
+    <script type="text/javascript">
+        window.onload = function() {
+            let obj = document.getElementById('submit');
+            obj.onclick = function() {
+                let form = document.getElementById('form');
+                if (form.checkValidity()) {
+                    obj.classList.add('loading');
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Similar Users</h1>
+
+    <form id='form' action="/users" method="post">
+        <div class="hor">
+            <select id='user_id' name='user_id'>
+                {% if rand_users %}
+                {% for row in rand_users %}
+                <option value="{{row.get('id')}}" {% if row.get('id')==user_id %} selected {% endif %}>{{row.get('user_name')}} :: {{row.get('prompt_subject')}}</option>
+                {% endfor %}
+                {% endif %}
+            </select>
+            <label class="mar"></label>
+        </div>
+
+        <input id='submit' type="submit" value="Find similar users" />
+    </form>
+
+    <div class="result">
+        {% if rows %}
+        <p>{{user.get('user_name')}} :: {{user.get('prompt_subject')}}
+            <br>
+            <span class='small'>{{'<br>'.join(user.get('sample_prompts'))|safe}}</span>
+        <hr>
+        <span class="small">Similar users to <b>{{user_id}}</b>:</span>
+        {% for row in rows %}
+        <p>{{row.get('user_name')}} :: {{row.get('prompt_subject')}}
+            <br>
+            <span class='small'>{{'<br>'.join(row.get('sample_prompts'))|safe}}</span>
+            <span class='small'><br>(score: {{row.get('score')|round(3)}})</span></p>
+        <br>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</body>

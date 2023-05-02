@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+  <title>Semantic prompt search</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='scavenger.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+
+  <script type="text/javascript">
+
+    window.onload = function(){
+        let obj = document.getElementById('submit');
+        obj.onclick = function(){
+            let form = document.getElementById('form');
+            if(form.checkValidity()){
+                obj.classList.add('loading');
+            }
+        }
+    }
+
+  </script>
+</head>
+
+<body>
+  <h1>Semantic prompt search</h1>
+
+  <form id='form' action="/" method="post">
+    <div class="hor" >
+        <input type="text" id='query' name="query" class="wide" placeholder="Who won the last FIFA world cup?" required value="{{query}}" />
+        <label class="mar"></label>
+    </div>
+
+    <input id='submit' type="submit" value="Find similar prompts" />
+  </form>
+
+  <div class="result">
+      {% if rows %}
+            <span class="small">Top {{top_n}} results for <b>{{query}}</b>:</span>
+          {% for row in rows %}
+             <p>{{' '.join(row.get('text2').split()[:20])}}... <span class='small'>(score: {{row.get('score')|round(3)}})</span></p>
+         {% endfor %}
+      {% endif %}
+  </div>
+
+</body>

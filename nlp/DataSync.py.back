@@ -1,0 +1,44 @@
+@staticmethod
+    def add_user(user: dict) -> dict:
+
+        """
+        DEPRECATED :: forget it... method changed - read the users from postgres
+
+        DONE - verify user struct/fields and content
+        verify user_id ordinal new
+        persist users
+        return OK or error
+
+        enter a dummy salient vec
+        then next - there will be a job that calculates prompt vectors and salient...
+        :param user:
+        :return:
+        """
+        return {}
+
+        # if not user or not isinstance(user, dict):
+        #     return {ERROR: 'blank user or user is not dict'}
+        # if COLUMN_USER_ID not in user:
+        #     return {ERROR: f'missing {COLUMN_USER_ID}'}
+        # if (user_id := user.get(COLUMN_USER_ID)) and not isinstance(user_id, int):
+        #     return {ERROR: f'{COLUMN_USER_ID} should be int'}
+        # user_id_expected = self.df_users[COLUMN_USER_ID].max() + 1
+        # if user_id != user_id_expected:
+        #     return {ERROR: f'{COLUMN_USER_ID}: {user_id} not sequential - expected: {user_id_expected}'}
+        #
+        # keys = list(user.keys())
+        # for key in keys:
+        #     if key not in self.df_users:
+        #         del user[key]
+        #
+        # v_size = self.vectors.shape[-1]
+        # user[SALIENT_VEC] = torch.zeros(v_size)
+        #
+        # if P_SUBJECT not in user:
+        #     user[P_SUBJECT] = BLANK
+        #
+        # u_name = self.get_sys_user_name(user_id)
+        # self.users[u_name] = user
+        # self.persist_users()
+        #
+        # return {STATUS: f'OK, successfully added user {user_id}'}
