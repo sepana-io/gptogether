@@ -53,5 +53,5 @@ GPTogether backend code is written in Python which enhances the capabilities of 
 
 ## License
 
-The GPTogether project is licensed under the MIT License. See the [LICENSE file](LICENSE) for more information.
+The GPTogether project is licensed under the Apache 2 License. See the [LICENSE file](LICENSE) for more information.
 
