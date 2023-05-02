@@ -1,6 +1,8 @@
 # GPTogether
 
-GPTogether is a project that aims to improve the experience of ChatGPT by sharing prompts and connecting users based on their prompts and interests. It's a great tool for people who are looking to expand their social circles, have engaging conversations, and discover new things. The project uses Next.js for the client-side, FastAPI for the backend, and an ML module using vector DB.
+GPTogether turns GPT prompts into a social experience. Connect with others who are curious about similar topics. Explore the world through the unique lens of collaborative prompting. Inspire together in the age of GPT. Forget social networks. Experience the magic of prompt networks.
+
+It is a project that aims to improve the experience of ChatGPT by sharing prompts and connecting users based on their prompts and interests. It's a great tool for people who are looking to expand their social circles, have engaging conversations, and discover new things. The project uses Next.js for the client-side, FastAPI for the backend, and an ML module using vector DB.
 
 ## Frontend
 
