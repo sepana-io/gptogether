@@ -1,11 +1,11 @@
 import React, { ButtonHTMLAttributes, ReactNode } from "react";
 import clsx from "clsx";
-import IconList from "../icon/icon-lib";
+import IconList from "../icons/icon-lib";
 import { filterOut } from "../utils/functions";
 import { buttonTheme } from "./button-theme";
 import { buttonSize, iconSize } from "./button-size";
 
-import Icon from "../icon/Icon";
+import Icon from "../icons/Icon";
 
 interface CommonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:

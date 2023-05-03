@@ -1,5 +1,5 @@
 import React, { HTMLAttributes } from "react";
-import IconList from "../icon/icon-lib";
+import IconList from "../icons/icon-lib";
 import clsx from "clsx";
 import { filterOut } from "../utils/functions";
 import { avatarTheme } from "./avatar-theme";
@@ -10,7 +10,7 @@ import {
   verifiedCheckSize,
 } from "./avatar-size";
 
-import Icon from "../icon/Icon";
+import Icon from "../icons/Icon";
 
 interface CommonProps extends HTMLAttributes<HTMLDivElement> {
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl";

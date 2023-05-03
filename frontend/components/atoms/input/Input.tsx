@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes, ReactNode } from "react";
-import IconList from "../icon/icon-lib";
+import IconList from "../icons/icon-lib";
 import clsx from "clsx";
-import Icon from "../icon/Icon";
+import Icon from "../icons/Icon";
 import Text from "../text/Text";
 import { filterOut } from "../utils/functions";
 import {
