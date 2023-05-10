@@ -14,6 +14,7 @@ export default function Conversation({
   isLoading,
   previousVisibility,
   previousUserDetails,
+  errorMessage,
 }: any) {
   return (
     <div className="py-[40px] px-[32px] gap-[16px] flex flex-col">
@@ -56,6 +57,11 @@ export default function Conversation({
           userDetails={userDetails}
           loading={true}
         />
+      )}
+      {errorMessage && (
+        <div className="px-[20px] py-[8px] rounded-[8px] text-size_body2 w-full bg-danger-50 text-danger-700 font-semibold">
+          {errorMessage}
+        </div>
       )}
     </div>
   );

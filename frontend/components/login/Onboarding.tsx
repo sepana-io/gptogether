@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import { useFormik } from "formik";
 import { useMutation } from "react-query";
 import { useUser } from "hooks/useUser";
@@ -34,6 +35,12 @@ export default function Onboarding() {
     onSuccess: () => {
       window.location.reload();
     },
+    onError: (error: any) => {
+      formik.setFieldError(
+        "openai_api_key",
+        _.get(error, "response.data.detail")
+      );
+    },
   });
 
   const onSubmit = (values: any) => {
@@ -45,8 +52,6 @@ export default function Onboarding() {
     onSubmit,
     validate,
   });
-
-  console.log(user);
 
   return (
     <form

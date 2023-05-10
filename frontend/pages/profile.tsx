@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import { useMutation, useQuery } from "react-query";
 import type { GetServerSideProps } from "next";
 import Link from "next/link";
@@ -29,11 +30,15 @@ export default function ProfilePage({ host }: Props) {
   const { mutate, isError, error, isLoading } = useMutation<any>(
     updateUserInfo,
     {
-      onSuccess: () => {
-        window.location.reload();
+      onError: (error: any) => {
+        chatApiKeyformik.setFieldError(
+          "openai_api_key",
+          _.get(error, "response.data.detail")
+        );
       },
     }
   );
+
   const { data: decryptedKey, isLoading: decryptedKeyLoading } = useQuery(
     ["decryptedKey", userDetails?.openai_api_key],
     () => decryptKey(userDetails?.openai_api_key),
@@ -44,7 +49,7 @@ export default function ProfilePage({ host }: Props) {
    * Onsubmit for both the forms
    */
   const onSubmit = (values: any) => {
-    mutate(values);
+    return mutate(values);
   };
 
   /**
@@ -89,6 +94,8 @@ export default function ProfilePage({ host }: Props) {
       </div>
     );
   }
+
+  // console.log(chatApiKeyformik);
 
   return (
     <div className="flex">

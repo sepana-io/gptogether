@@ -1,6 +1,7 @@
 import { Avatar } from "components/atoms";
 import React from "react";
 import { reduce } from "lodash";
+import clsx from "clsx";
 
 interface UserAvatarProps {
   user: any;
@@ -19,7 +20,7 @@ export default function UserAvatar({
         type="image"
         imageUrl={user?.image_url}
         size={size}
-        className={className}
+        className={clsx("bg-gray-100 bg-cover bg-center", className)}
       />
     );
   }

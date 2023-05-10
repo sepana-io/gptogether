@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import _ from "lodash";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "contexts/UserContext";
@@ -52,16 +53,19 @@ export default function Chat() {
   /**
    * Update Conversation
    */
-  const { mutate: updateChatMutate, isLoading: updateChatLoading } =
-    useMutation({
-      mutationFn: ({ query, visibility_setting }: any) => {
-        return updateConversation(currentChatID, query, visibility_setting);
-      },
-      onSuccess: (data) => {
-        setLastMessage("");
-        refetchConversationData();
-      },
-    });
+  const {
+    mutate: updateChatMutate,
+    isLoading: updateChatLoading,
+    error: updateChatError,
+  } = useMutation({
+    mutationFn: ({ query, visibility_setting }: any) => {
+      return updateConversation(currentChatID, query, visibility_setting);
+    },
+    onSuccess: (data) => {
+      setLastMessage("");
+      refetchConversationData();
+    },
+  });
   const updateChat = (val: string) => {
     setQuery("");
     setLastMessage(val);
@@ -104,6 +108,7 @@ export default function Chat() {
                 messageHistory={conversationData?.message_history}
                 lastMessage={lastMessage}
                 isLoading={updateChatLoading}
+                errorMessage={_.get(updateChatError, "response.data.detail")}
               />
             )}
           </ChatContainer>
