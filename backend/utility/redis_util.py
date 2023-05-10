@@ -9,14 +9,7 @@ GPTOGETHER_REDIS_PORT = os.getenv("GPTOGETHER_REDIS_PORT", "6379")
 pool = redis.ConnectionPool(
     host=GPTOGETHER_REDIS_HOST, port=GPTOGETHER_REDIS_PORT, password=GPTOGETHER_REDIS_PASSWORD
 )
-redis_url = (
-    "redis://:"
-    + GPTOGETHER_REDIS_PASSWORD
-    + "@"
-    + GPTOGETHER_REDIS_HOST
-    + ":"
-    + GPTOGETHER_REDIS_PORT
-)
+redis_url = f"redis://:{GPTOGETHER_REDIS_PASSWORD}@{GPTOGETHER_REDIS_HOST}:{GPTOGETHER_REDIS_PORT}"
 
 
 def singleton(fn):

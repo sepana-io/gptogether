@@ -18,6 +18,7 @@ from app.model import (
 from utility.utils import (
     decrypt_key
 )
+from openai.error import OpenAIError
 from sqlalchemy import and_, func, text, desc, or_
 from utility.database import SessionLocal
 from utility.database_ro import SessionLocalRO
@@ -45,6 +46,11 @@ def get_gpt_response(history:List, api_key:str):
             "content": response_content
         })
         return history, response_content
+    except OpenAIError as err:
+        raise HTTPException(
+            detail=f"{err}",
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
     except Exception as err:
         raise HTTPException(
             detail=f"Issues while fetching OpenAI response {err}",

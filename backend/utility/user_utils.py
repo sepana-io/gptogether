@@ -15,6 +15,7 @@ from utility.database import SessionLocal
 from utility.database_ro import SessionLocalRO
 from fastapi import HTTPException, status
 from utility.cryptography_utils import get_encrypting_object
+from utility.conversation_utils import get_gpt_response
 
 
 encrypter = get_encrypting_object()
@@ -89,6 +90,16 @@ def fetch_user_info_by_user_id(user_id: str):
         session.close()
 
 
+def verify_user(openai_api_key):
+    message = [
+                {
+                    'role': 'user',
+                    'content': "hello"
+                }
+            ]
+    _,_ = get_gpt_response(message, openai_api_key)
+
+
 def onboard_user(user_info: GPTogetherUserOnboarding, user_id: str):
     """
     It allows to onboard/insert a user in the system
@@ -96,7 +107,10 @@ def onboard_user(user_info: GPTogetherUserOnboarding, user_id: str):
     session = None
     try:
         encryted_key = None
+        session = SessionLocal()
+
         if user_info.openai_api_key:
+            verify_user(user_info.openai_api_key)
             encryted_key = encrypter.encrypt(str(user_info.openai_api_key).encode())
             encryted_key = encryted_key.decode()
 
@@ -118,7 +132,7 @@ def onboard_user(user_info: GPTogetherUserOnboarding, user_id: str):
             extra_metadata=user_info.extra_metadata,
             active=True,
         )
-        session = SessionLocal()
+        
         session.add(gptogether_user)
         session.commit()
         user = session.query(GPTogetherUser).filter(
@@ -177,6 +191,7 @@ def update_user(user_info: GPTogetherUserUpdate, user_id:str):
         if user_info.extra_metadata:
             gptogether_user.extra_metadata = user_info.extra_metadata
         if user_info.openai_api_key:
+            verify_user(user_info.openai_api_key)
             encryted_key = encrypter.encrypt(str(user_info.openai_api_key).encode())
             encryted_key = encryted_key.decode()
             gptogether_user.openai_api_key =  encryted_key
