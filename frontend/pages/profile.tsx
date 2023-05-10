@@ -30,6 +30,9 @@ export default function ProfilePage({ host }: Props) {
   const { mutate, isError, error, isLoading } = useMutation<any>(
     updateUserInfo,
     {
+      onSuccess: () => {
+        window.location.reload();
+      },
       onError: (error: any) => {
         chatApiKeyformik.setFieldError(
           "openai_api_key",

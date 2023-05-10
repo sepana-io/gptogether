@@ -35,27 +35,27 @@ export default function SocialAccountForm({
         className="mb-[8px]"
         {...formik.getFieldProps("twitter_handle")}
       />
-      <Input
+      {/* <Input
         size="md"
         autoComplete="off"
         label="Instagram Handle"
         className="mb-[8px]"
         {...formik.getFieldProps("instagram_handle")}
-      />
-      <Input
+      /> */}
+      {/* <Input
         size="md"
         autoComplete="off"
         label="Facebook Handle"
         className="mb-[8px]"
         {...formik.getFieldProps("facebook_handle")}
-      />
-      <Input
+      /> */}
+      {/* <Input
         size="md"
         autoComplete="off"
         label="YouTube Handle"
         className="mb-[8px]"
         {...formik.getFieldProps("youtube_channel")}
-      />
+      /> */}
       <Input
         size="md"
         autoComplete="off"
@@ -63,13 +63,13 @@ export default function SocialAccountForm({
         className="mb-[8px]"
         {...formik.getFieldProps("discord_handle")}
       />
-      <Input
+      {/* <Input
         size="md"
         autoComplete="off"
         label="Telegram Handle"
         className="mb-[8px]"
         {...formik.getFieldProps("telegram_handle")}
-      />
+      /> */}
       {initialValue && (
         <Button
           type="submit"

@@ -39,7 +39,7 @@ export default function UserListItem({
           </div>
         </div>
         <div className="flex gap-[8px] flex-wrap justify-end">
-          <Link
+          {/* <Link
             href={`https://www.instagram.com/${userDetails?.instagram_handle}`}
             target="_blank"
           >
@@ -50,7 +50,7 @@ export default function UserListItem({
               iconElement={<RiInstagramLine size="20px" />}
               disabled={!userDetails?.instagram_handle}
             />
-          </Link>
+          </Link> */}
           <Link
             href={`https://twitter.com/${userDetails?.twitter_handle}`}
             target="_blank"
@@ -63,20 +63,19 @@ export default function UserListItem({
               disabled={!userDetails?.twitter_handle}
             />
           </Link>
-          <Link
+          {/* <Link
             href={`https://www.youtube.com/@${userDetails?.youtube_channel}`}
             target="_blank"
           >
             <Button
-              // onClick={(e) => e.preventDefault()}
               variant="tertiary"
               className="rounded-full"
               size="xs"
               iconElement={<RiYoutubeLine size="20px" />}
               disabled={!userDetails?.youtube_channel}
             />
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             href={`https://t.me/${userDetails?.telegram_handle}`}
             target="_blank"
           >
@@ -87,8 +86,8 @@ export default function UserListItem({
               iconElement={<RiTelegramLine size="20px" />}
               disabled={!userDetails?.telegram_handle}
             />
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             href={`https://www.facebook.com/${userDetails?.facebook_handle}`}
             target="_blank"
           >
@@ -99,7 +98,7 @@ export default function UserListItem({
               iconElement={<RiFacebookCircleLine size="20px" />}
               disabled={!userDetails?.facebook_handle}
             />
-          </Link>
+          </Link> */}
           <Link
             href={`https://discord.com/channels/@${userDetails?.discord_handle}`}
             target="_blank"
