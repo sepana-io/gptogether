@@ -6,6 +6,7 @@ import { useUser } from "hooks/useUser";
 import { Spinner, Text } from "components/atoms";
 import Sidebar from "components/common/Sidebar";
 import UserListItem from "components/connect/UserListItem";
+import Link from "next/link";
 
 export default function Connect() {
   const { findSimilarUsers, fetchUserByIDs } = useUser();
@@ -81,8 +82,12 @@ const UsersList = ({ similarPrompts, usersList, isLoading }: UserListProps) => {
 
   if (!similarPrompts || similarPrompts.length === 0) {
     return (
-      <Text size="text-size_body2" weight="font-medium" color="text-gray-700">
-        No Similar Users found
+      <Text size="text-size_body1" weight="font-medium" color="text-gray-700">
+        No Similar Users found. You might need to have some{" "}
+        <Link href="/chat" className="text-primary-500 underline">
+          prompt conversation here
+        </Link>{" "}
+        to start finding similar users.
       </Text>
     );
   }

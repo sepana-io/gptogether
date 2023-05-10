@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
+import _ from "lodash";
 import Image from "next/image";
 import { Button, Input, Radio, Spinner, Text } from "components/atoms";
 import { useMutation, useQuery } from "react-query";
@@ -68,12 +69,13 @@ export default function Chat() {
       <div className="flex-grow relative">
         <div className="h-screen max-h-screen overflow-scroll pb-[200px]">
           <ChatContainer>
-            {chatMulateLoading || chatMutateData ? (
+            {chatMulateLoading || chatMutateData || chatMutateError ? (
               <Conversation
                 messageHistory={[]}
                 lastMessage={lastMessage}
-                isLoading={true}
+                isLoading={chatMulateLoading}
                 userDetails={userDetails}
+                errorMessage={_.get(chatMutateError, "response.data.detail")}
               />
             ) : (
               <>
