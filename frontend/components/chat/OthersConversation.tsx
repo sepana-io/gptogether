@@ -90,52 +90,57 @@ export default function OthersConversation({
             userDetails={userProfileData}
             messageHistory={conversationData?.message_history}
           />
-          <div className="px-[32px] py-[24px] bg-gray-50 rounded-[20px]">
-            <Text size="text-size_heading6" className="font-semibold mb-[8px]">
-              Continue Conversation
-            </Text>
-            <div className="flex items-center justify-start gap-[12px] z-10 mb-[16px]">
-              <Text size="text-size_body2" className="font-semibold">
-                Keep continued conversation:
+          {_.get(conversationData, "message_history.length") > 0 && (
+            <div className="px-[32px] py-[24px] bg-gray-50 rounded-[20px]">
+              <Text
+                size="text-size_heading6"
+                className="font-semibold mb-[8px]"
+              >
+                Continue Conversation
               </Text>
-              <Radio
+              <div className="flex items-center justify-start gap-[12px] z-10 mb-[16px]">
+                <Text size="text-size_body2" className="font-semibold">
+                  Keep continued conversation:
+                </Text>
+                <Radio
+                  disabled={disableContinue}
+                  className="gap-[8px]"
+                  defaultChecked
+                  label="Public"
+                  name="visibility_setting"
+                  value="history_exposed"
+                  checked={visibilitySetting === "history_exposed"}
+                  onChange={(e: any) => setVisibilitySetting(e.target.value)}
+                />
+                <Radio
+                  disabled={disableContinue}
+                  className="gap-[8px]"
+                  label="First Prompt Public"
+                  name="visibility_setting"
+                  value="prompts_exposed"
+                  checked={visibilitySetting === "prompts_exposed"}
+                  onChange={(e: any) => setVisibilitySetting(e.target.value)}
+                />
+                <Radio
+                  disabled={disableContinue}
+                  className="gap-[8px]"
+                  label="Private"
+                  name="visibility_setting"
+                  value="private"
+                  checked={visibilitySetting === "private"}
+                  onChange={(e: any) => setVisibilitySetting(e.target.value)}
+                />
+              </div>
+              <Button
+                size="lg"
+                className="w-full"
+                onClick={contiueConversation}
                 disabled={disableContinue}
-                className="gap-[8px]"
-                defaultChecked
-                label="Public"
-                name="visibility_setting"
-                value="history_exposed"
-                checked={visibilitySetting === "history_exposed"}
-                onChange={(e: any) => setVisibilitySetting(e.target.value)}
-              />
-              <Radio
-                disabled={disableContinue}
-                className="gap-[8px]"
-                label="First Prompt Public"
-                name="visibility_setting"
-                value="prompts_exposed"
-                checked={visibilitySetting === "prompts_exposed"}
-                onChange={(e: any) => setVisibilitySetting(e.target.value)}
-              />
-              <Radio
-                disabled={disableContinue}
-                className="gap-[8px]"
-                label="Private"
-                name="visibility_setting"
-                value="private"
-                checked={visibilitySetting === "private"}
-                onChange={(e: any) => setVisibilitySetting(e.target.value)}
-              />
+              >
+                Continue Conversation
+              </Button>
             </div>
-            <Button
-              size="lg"
-              className="w-full"
-              onClick={contiueConversation}
-              disabled={disableContinue}
-            >
-              Continue Conversation
-            </Button>
-          </div>
+          )}
         </ChatContainer>
       </div>
     </div>

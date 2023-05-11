@@ -38,13 +38,14 @@ export default function Conversation({
           </div>
         </>
       )}
-      {messageHistory.map((item: any, index: number) => (
-        <ConversationMessageItem
-          item={item}
-          key={`message-${item.content}-${index}`}
-          userDetails={userDetails}
-        />
-      ))}
+      {messageHistory &&
+        messageHistory.map((item: any, index: number) => (
+          <ConversationMessageItem
+            item={item}
+            key={`message-${item.content}-${index}`}
+            userDetails={userDetails}
+          />
+        ))}
       {lastMessage && lastMessage !== "" && (
         <ConversationMessageItem
           item={{ role: "user", content: lastMessage }}

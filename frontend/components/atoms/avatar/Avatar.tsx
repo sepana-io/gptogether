@@ -9,6 +9,7 @@ import {
   statusSize,
   verifiedCheckSize,
 } from "./avatar-size";
+import Image from "next/image";
 
 import Icon from "../icons/Icon";
 
@@ -150,7 +151,7 @@ export default function Avatar({
         className
       )}
       style={
-        type === "image"
+        type === "image" && imageUrl
           ? {
               backgroundImage: `url("${imageUrl}")`,
               ...style,

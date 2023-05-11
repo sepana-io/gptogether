@@ -111,53 +111,55 @@ export default function ProfilePage({ host }: Props) {
         </div>
         <div className="w-full max-w-[552px] mx-auto py-[72px]">
           <UserDetailHeader user={userDetails} />
-          {userDetails?.interests && (
-            <div className="p-[32px] border border-gray-200 rounded-[8px] mb-[24px]">
-              <Text size="text-size_title1" className="font-semibold mb-[16px]">
-                About you
-              </Text>
-              <Text
-                size="text-size_caption1"
-                color="text-gray-700"
-                className="mb-[4px]"
-                weight="font-semibold"
-              >
-                Your Description (based on your prompts)
-              </Text>
-              <Text
-                size="text-size_body2"
-                color="text-gray-900"
-                className="font-semibold mb-[16px]"
-              >
-                {userDetails?.interests}
-              </Text>
-              <Text
-                size="text-size_caption1"
-                color="text-gray-700"
-                className="mb-[4px]"
-                weight="font-semibold"
-              >
-                Your prompts url
-              </Text>
-              <Link href={`/profile/${userDetails?.user_id}`} target="_blank">
-                <div className="bg-gray-50 rounded-[8px] px-[12px] py-[8px] flex items-center shadow-e2 border border-gray-100">
-                  <Text
-                    size="text-size_body2"
-                    color="text-gray-900"
-                    className="font-semibold flex-grow truncate"
-                  >
-                    {`${host}/profile/${userDetails?.user_id}`}
-                  </Text>
+          <div className="p-[32px] border border-gray-200 rounded-[8px] mb-[24px]">
+            <Text size="text-size_title1" className="font-semibold mb-[16px]">
+              About you
+            </Text>
+            {userDetails?.interests && (
+              <>
+                <Text
+                  size="text-size_caption1"
+                  color="text-gray-700"
+                  className="mb-[4px]"
+                  weight="font-semibold"
+                >
+                  Your Description (based on your prompts)
+                </Text>
+                <Text
+                  size="text-size_body2"
+                  color="text-gray-900"
+                  className="font-semibold mb-[16px]"
+                >
+                  {userDetails?.interests}
+                </Text>
+              </>
+            )}
+            <Text
+              size="text-size_caption1"
+              color="text-gray-700"
+              className="mb-[4px]"
+              weight="font-semibold"
+            >
+              Your prompts url
+            </Text>
+            <Link href={`/profile/${userDetails?.user_id}`} target="_blank">
+              <div className="bg-gray-50 rounded-[8px] px-[12px] py-[8px] flex items-center shadow-e2 border border-gray-100">
+                <Text
+                  size="text-size_body2"
+                  color="text-gray-900"
+                  className="font-semibold flex-grow truncate"
+                >
+                  {`${host}/profile/${userDetails?.user_id}`}
+                </Text>
 
-                  <Icon
-                    name="HiOutlineArrowUp"
-                    size={16}
-                    className="transform rotate-45"
-                  />
-                </div>
-              </Link>
-            </div>
-          )}
+                <Icon
+                  name="HiOutlineArrowUp"
+                  size={16}
+                  className="transform rotate-45"
+                />
+              </div>
+            </Link>
+          </div>
           <form onSubmit={chatApiKeyformik.handleSubmit}>
             <ChatApiKeyForm
               formik={chatApiKeyformik}
