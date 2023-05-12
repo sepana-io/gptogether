@@ -10,7 +10,9 @@ from sqlalchemy import (
     BigInteger,
     Integer,
     JSON,
+
 )
+from geoalchemy2 import Geometry
 from sqlalchemy.dialects.postgresql import JSONB
 from utility.database import Base
 from fastapi import Query
@@ -32,6 +34,7 @@ class GPTogetherUserOnboarding(BaseModel):
     instagram_handle: Optional[str] = Query(default=None, max_length=200)
     facebook_handle: Optional[str] = Query(default=None, max_length=200)
     youtube_channel: Optional[str] = Query(default=None, max_length=200)
+    location: Optional[Geometry('POINT')] = Query(default=None, max_length=200)
     image_url: Optional[str]
     extra_metadata: Optional[Dict] = {}
 
@@ -46,6 +49,7 @@ class GPTogetherUserUpdate(BaseModel):
     instagram_handle: Optional[str] = Query(default=None, max_length=200)
     facebook_handle: Optional[str] = Query(default=None, max_length=200)
     youtube_channel: Optional[str] = Query(default=None, max_length=200)
+    location: Optional[Geometry('POINT')] = Query(default=None, max_length=200)
     image_url: Optional[str]
     extra_metadata: Optional[Dict] = {}
 
@@ -58,7 +62,9 @@ class GPTogetherUser(Base):
     name = Column(String)
     openai_api_key = Column(String)
     twitter_handle = Column(String)
+    location = Column(Geometry('POINT'))
     discord_handle = Column(String)
+    location = Column(String)
     telegram_handle = Column(String)
     instagram_handle = Column(String)
     facebook_handle = Column(String)
@@ -82,6 +88,7 @@ class GPTogetherUser(Base):
             "discord_handle": self.discord_handle,
             "telegram_handle": self.telegram_handle,
             "instagram_handle": self.instagram_handle,
+            "location": self.location,
             "facebook_handle": self.facebook_handle,
             "youtube_channel": self.youtube_channel,
             "image_url": self.image_url,
@@ -177,6 +184,10 @@ class UserConversationFilters(BaseModel):
 class GPTogetherSimilarConversation(BaseModel):
     conversation_id: Optional[str]
     prompts: Optional[List[str]]
+
+
+class GPTogetherSimilarLocation(BaseModel):
+    location: Optional[Geometry('POINT')]
 
 """
 Auto-complete prompts input

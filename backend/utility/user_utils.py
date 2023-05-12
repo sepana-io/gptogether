@@ -207,6 +207,8 @@ def update_user(user_info: GPTogetherUserUpdate, user_id:str):
             gptogether_user.facebook_handle = user_info.facebook_handle
         if user_info.youtube_channel:
             gptogether_user.youtube_channel = user_info.youtube_channel
+        if user_info.location:
+            gptogether_user.location = user_info.location
         
         gptogether_user.updated_at = datetime.now()
         session.add(gptogether_user)
