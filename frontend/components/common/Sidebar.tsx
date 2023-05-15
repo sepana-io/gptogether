@@ -4,7 +4,6 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import { getAuth } from "firebase/auth";
 import { Text, Icon } from "components/atoms";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Menu, Transition } from "@headlessui/react";
 
 import UserAvatar from "components/common/UserAvatar";
@@ -20,6 +19,11 @@ const sidebarLinks = [
     route: "/connect",
     icon: <Icon name="HiOutlineUserGroup" size={24} className="min-w-[24px]" />,
     activeIcon: <Icon name="HiUserGroup" size={24} className="min-w-[24px]" />,
+  },
+  {
+    route: "/message",
+    icon: <Icon name="HiOutlineChatAlt2" size={24} className="min-w-[24px]" />,
+    activeIcon: <Icon name="HiChatAlt2" size={24} className="min-w-[24px]" />,
   },
 ];
 
@@ -108,10 +112,10 @@ export default function Sidebar() {
               key={item.route}
               href={item.route}
               className={clsx(
-                "block p-[8px] rounded-[12px] border transition focus:outline-none",
+                "block p-[8px] rounded-[12px] border-2 transition focus:outline-none",
                 active
-                  ? "text-primary-600 shadow-outline-focus_primary border-primary-100 bg-primary-50 focus:bg-primary-75"
-                  : "text-gray-600 border-transparent hover:bg-primary-50 hover:text-primary-600 focus:bg-primary-50 focus:text-primary-600"
+                  ? "text-primary-600 shadow-e2 border-primary-100 bg-primary-50 focus:bg-primary-75"
+                  : "text-gray-600 border-transparent hover:bg-primary-50 hover:text-primary-600 focus-visible:shadow-outline-focus_primary"
               )}
             >
               {active ? item.activeIcon : item.icon}

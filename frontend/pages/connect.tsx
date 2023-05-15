@@ -77,7 +77,16 @@ interface UserListProps {
 
 const UsersList = ({ similarPrompts, usersList, isLoading }: UserListProps) => {
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex flex-col gap-[8px]">
+        {[1, 2, 3].map((item) => (
+          <div
+            key={`loading-${item}`}
+            className="flex items-end justify-center p-[40px] bg-gray-50 animate-pulse rounded-[12px]"
+          />
+        ))}
+      </div>
+    );
   }
 
   if (!similarPrompts || similarPrompts.length === 0) {

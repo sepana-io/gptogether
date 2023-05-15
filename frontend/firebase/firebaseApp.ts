@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
 
+import "firebase/auth";
+import "firebase/firestore";
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

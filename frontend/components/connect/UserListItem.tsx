@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   RiDiscordLine,
@@ -9,11 +9,11 @@ import {
   RiTwitterLine,
   RiYoutubeLine,
 } from "react-icons/ri";
-
-import { Button, Icon, Text } from "components/atoms";
-
-import UserAvatar from "components/common/UserAvatar";
 import { useRouter } from "next/router";
+
+import { Button, Text } from "components/atoms";
+import UserAvatar from "components/common/UserAvatar";
+import SendMessageModal from "components/connect/SendMessageModal";
 
 interface UserListItemProps {
   promptDetail: any;
@@ -28,17 +28,17 @@ export default function UserListItem({
 
   return (
     <div className="flex gap-[40px] py-[12px] px-[20px] border border-gray-100 rounded-[12px]">
-      <div className="flex-grow grid grid-cols-2 gap-[40px] items-start">
-        <div className="flex gap-[16px] items-center">
+      <div className="flex-grow flex gap-[40px] items-start">
+        <div className="flex flex-grow gap-[16px] items-center">
           <UserAvatar size="lg" user={userDetails} />
           <div>
-            <Text size="text-size_title1" weight="font-semibold">
+            <Text size="text-size_title2" weight="font-semibold">
               {userDetails?.name || userDetails?.user_id}
             </Text>
             <Text size="text-size_body2">{promptDetail?.prompt_subject}</Text>
           </div>
         </div>
-        <div className="flex gap-[8px] flex-wrap justify-end">
+        <div className="flex gap-[8px] flex-wrap justify-end py-[6px]">
           {/* <Link
             href={`https://www.instagram.com/${userDetails?.instagram_handle}`}
             target="_blank"
@@ -113,25 +113,18 @@ export default function UserListItem({
           </Link>
         </div>
       </div>
-      <div className="w-[164px] min-w-[164px] py-[4px]">
-        <Link
-          href={`/profile/${userDetails?.user_id}`}
-          target="_blank"
-          className="flex items-center ml-auto gap-[4px] text-info-500 underline"
-        >
-          <Text
-            size="text-size_body2"
-            weight="font-semibold"
-            className="ml-[auto]"
+      <div className="flex gap-[12px] items-start w-[264px] min-w-[264px] py-[6px]">
+        <Link href={`/profile/${userDetails?.user_id}`} target="_blank">
+          <Button
+            rightIcon="HiOutlineArrowUp"
+            iconClassName="transform rotate-45"
+            variant="secondary"
+            size="sm"
           >
             View Prompts
-          </Text>
-          <Icon
-            name="HiOutlineArrowUp"
-            size={16}
-            className="transform rotate-45"
-          />
+          </Button>
         </Link>
+        <SendMessageModal userDetails={userDetails} />
       </div>
     </div>
   );

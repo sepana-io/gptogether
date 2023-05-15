@@ -57,7 +57,6 @@ export default function Avatar({
   text,
   icon = "HiUser",
   className = "",
-  style,
   ...rest
 }: AvatarProps) {
   const currentAvatarTheme = avatarTheme[type];
@@ -135,7 +134,7 @@ export default function Avatar({
     <div
       className={clsx(
         displayClass,
-        "antialiased relative items-center justify-center",
+        "antialiased relative items-center justify-center overflow-hidden",
         combinedPsedoClassArray,
         transitionClass,
         weightClass,
@@ -150,16 +149,9 @@ export default function Avatar({
         // --
         className
       )}
-      style={
-        type === "image" && imageUrl
-          ? {
-              backgroundImage: `url("${imageUrl}")`,
-              ...style,
-            }
-          : style
-      }
       {...rest}
     >
+      {type === "image" && <Image src={imageUrl} alt="profile-image" fill />}
       {type === "icon" && <Icon name={icon} className={iconSizeClass} />}
       {type === "text" && text}
       {status && (
