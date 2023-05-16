@@ -14,7 +14,6 @@ import UserDetailHeader from "components/login/UserDetailHeader";
 import ChatApiKeyForm from "components/login/ChatApiKeyForm";
 import SocialAccountForm from "components/login/SocialAccountForm";
 import DeleteAccount from "components/login/DeleteAccount";
-import { useRouter } from "next/router";
 
 type Props = { host: string | null };
 
@@ -23,9 +22,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 ) => ({ props: { host: context.req.headers.host || null } });
 
 export default function ProfilePage({ host }: Props) {
-  const router = useRouter();
   const { decryptKey } = usePublic();
-  const { user, userDetails } = useAuth();
+  const { userDetails } = useAuth();
   const { updateUserInfo } = useUser();
   const { mutate, isError, error, isLoading } = useMutation<any>(
     updateUserInfo,

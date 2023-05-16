@@ -1,46 +1,17 @@
 import React, { useRef, useEffect } from "react";
-import { Button, Input } from "components/atoms";
+import _ from "lodash";
+
+import { Button } from "components/atoms";
+import { useRouter } from "next/router";
 import UserAvatar from "components/common/UserAvatar";
-import { useFirebase } from "hooks/useFirebase";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  QueryDocumentSnapshot,
-  DocumentData,
-} from "firebase/firestore";
-import { useAuth } from "contexts/UserContext";
-// import { useCollection } from "react-firebase-hooks/firestore";
+import SendMessageForm from "components/messages/SendMessageForm";
 
 export default function SendMessageModal({ userDetails }: any) {
+  const router = useRouter();
   const modalRef = useRef<any>(null);
-  const { sendMessage } = useFirebase();
-  const { firestore } = useAuth();
-  // const [value, valueLoading, error] = useCollection(
-  //   collection(getFirestore(firebaseApp), "a-b"),
-  //   {}
-  // );
-
-  // const data = collection(firestore, "a-b");
-  //
-  // console.log({ data });
-
-  // if (data) {
-  //   data.docs.map((doc) => console.log(doc.data()));
-  // }
-
-  // if (!valueLoading && value) {
-  //   value.docs.map((doc) => console.log(doc.data()));
-  // }
-  // const getData = async () => {
-  //   const result = await firestore.collection("a-b").doc("1232").get();
-
-  //   console.log(result);
-  // };
 
   useEffect(() => {
     closeModalOnOverlayClick();
-    // getData();
   }, []);
 
   const showModal = () => {
@@ -61,11 +32,6 @@ export default function SendMessageModal({ userDetails }: any) {
     });
   };
 
-  const onButtonClick = () => {
-    const res = sendMessage();
-    console.log(res);
-  };
-
   return (
     <>
       <Button onClick={showModal} leftIcon="HiOutlineChatAlt2" size="sm">
@@ -83,14 +49,15 @@ export default function SendMessageModal({ userDetails }: any) {
             {userDetails?.name || userDetails?.user_id}
           </p>
         </div>
-        <Input
-          size="md"
-          placeholder="Type your message"
-          className="mb-[12px]"
+        <SendMessageForm
+          className="flex flex-col gap-[12px]"
+          type="verical"
+          sendToUser={userDetails}
+          onSuccess={() => {
+            modalRef.current?.close();
+            router.push("/messages");
+          }}
         />
-        <Button onClick={onButtonClick} size="md" className="w-full">
-          Send
-        </Button>
       </dialog>
     </>
   );

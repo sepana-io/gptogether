@@ -21,7 +21,7 @@ const sidebarLinks = [
     activeIcon: <Icon name="HiUserGroup" size={24} className="min-w-[24px]" />,
   },
   {
-    route: "/message",
+    route: "/messages",
     icon: <Icon name="HiOutlineChatAlt2" size={24} className="min-w-[24px]" />,
     activeIcon: <Icon name="HiChatAlt2" size={24} className="min-w-[24px]" />,
   },

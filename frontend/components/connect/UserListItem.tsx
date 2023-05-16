@@ -38,7 +38,7 @@ export default function UserListItem({
             <Text size="text-size_body2">{promptDetail?.prompt_subject}</Text>
           </div>
         </div>
-        <div className="flex gap-[8px] flex-wrap justify-end py-[6px]">
+        <div className="flex gap-[8px] flex-wrap justify-end py-[6px] w-[76px] min-w-[76px]">
           {/* <Link
             href={`https://www.instagram.com/${userDetails?.instagram_handle}`}
             target="_blank"
