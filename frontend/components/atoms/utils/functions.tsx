@@ -1,3 +1,5 @@
+import moment from "moment";
+
 /**
  *
  * @param className Filter From
@@ -18,4 +20,18 @@ export const filterOut = (
   return filteredClassNames.length
     ? filteredClassNames.join(" ")
     : defaultReturn;
+};
+
+/**
+ * Get Date Time
+ * @param time
+ * @returns string
+ */
+export const getDate = (time: any) => {
+  const timeVal = new Date(time.seconds * 1000 + time.nanoseconds / 1000000);
+  if (moment(timeVal).startOf("day").fromNow() === "12 hours ago") {
+    return moment(timeVal).format("LT");
+  } else {
+    return moment(timeVal).startOf("day").fromNow();
+  }
 };

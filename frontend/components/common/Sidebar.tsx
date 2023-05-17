@@ -1,4 +1,5 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import _ from "lodash";
 import Link from "next/link";
 import clsx from "clsx";
 import { useRouter } from "next/router";
@@ -8,6 +9,7 @@ import { Menu, Transition } from "@headlessui/react";
 
 import UserAvatar from "components/common/UserAvatar";
 import { useAuth } from "contexts/UserContext";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
 const sidebarLinks = [
   {
@@ -28,9 +30,44 @@ const sidebarLinks = [
 ];
 
 export default function Sidebar() {
+  const { firestore, user } = useAuth();
   const router = useRouter();
   const auth = getAuth();
   const { userDetails } = useAuth();
+  const [totalNewMessages, setTotalNewMessages] = useState<number>(0);
+
+  useEffect(() => {
+    subscribeToAnyMessageChange();
+  }, []);
+
+  /**
+   * Subscribe to change in data and set selectedCoversations and
+   * @returns
+   */
+  const subscribeToAnyMessageChange = () => {
+    if (!user) {
+      setTotalNewMessages(0);
+      return;
+    }
+    const q = query(
+      collection(firestore, user?.uid),
+      orderBy("last_updated", "desc")
+    );
+    onSnapshot(q, (querySnapchot) => {
+      let ar: any = [];
+      querySnapchot.docs.forEach((doc) => {
+        ar.push(doc.data());
+      });
+      const newTotalMessage: number = _.reduce(
+        ar,
+        function (sum, item) {
+          return sum + item.total_unread;
+        },
+        0
+      );
+      setTotalNewMessages(newTotalMessage);
+    });
+  };
 
   return (
     <div className="py-[24px] px-[12px] bg-gray-25 border-r border-gray-75 h-screen relative z-10">
@@ -112,13 +149,18 @@ export default function Sidebar() {
               key={item.route}
               href={item.route}
               className={clsx(
-                "block p-[8px] rounded-[12px] border-2 transition focus:outline-none",
+                "block p-[8px] rounded-[12px] border-2 transition focus:outline-none relative",
                 active
                   ? "text-primary-600 shadow-e2 border-primary-100 bg-primary-50 focus:bg-primary-75"
                   : "text-gray-600 border-transparent hover:bg-primary-50 hover:text-primary-600 focus-visible:shadow-outline-focus_primary"
               )}
             >
               {active ? item.activeIcon : item.icon}
+              {item.route === "/messages" && totalNewMessages > 0 && (
+                <p className="absolute -bottom-[8px] -right-[8px] text-size_caption2 font-semibold text-neutral_white bg-success-500 px-[8px] shadow-e1 rounded-full py-[2px]">
+                  {totalNewMessages}
+                </p>
+              )}
             </Link>
           );
         })}

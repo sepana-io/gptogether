@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import { getDate } from "components/atoms/utils/functions";
 import { useAuth } from "contexts/UserContext";
 
 import UserAvatar from "components/common/UserAvatar";
@@ -22,11 +23,14 @@ export default function MessageConversation({
   return (
     <div className="w-full max-w-[880px] flex flex-col gap-[16px] mx-auto pt-[24px] pb-[200px] px-[40px]">
       {currentConversation &&
-        _.get(currentConversation, "messages").map((item: any) => (
+        _.get(currentConversation, "messages")?.map((item: any) => (
           <div className="flex gap-[20px]">
             <UserAvatar
+              user={{
+                user_name: currentConversation.user_name,
+                image_url: currentConversation.user_image,
+              }}
               size="sm"
-              user={{ name: "A" }}
               className={clsx({
                 "opacity-1": _.get(item, "type") === "incoming",
                 "opacity-0": _.get(item, "type") === "outgoing",
@@ -49,6 +53,9 @@ export default function MessageConversation({
                 })}
               >
                 {_.get(item, "message")}
+                <p className="text-size_caption2 mt-[4px] opacity-60">
+                  {getDate(_.get(item, "Timestamp"))}
+                </p>
               </div>
             </div>
             <UserAvatar

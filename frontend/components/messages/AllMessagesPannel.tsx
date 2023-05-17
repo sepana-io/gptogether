@@ -1,12 +1,13 @@
 import React from "react";
-import moment from "moment";
+import _ from "lodash";
+import { getDate } from "components/atoms/utils/functions";
 
 import UserAvatar from "components/common/UserAvatar";
 import clsx from "clsx";
 
 interface AllMessagesPannelProps {
   allMessages: any;
-  selectedConversation: number;
+  selectedConversation: any;
   setSelectedConversation: (val: number) => void;
 }
 
@@ -15,15 +16,6 @@ export default function AllMessagesPannel({
   selectedConversation,
   setSelectedConversation,
 }: AllMessagesPannelProps) {
-  const getDate = (time: any) => {
-    const timeVal = new Date(time.seconds * 1000 + time.nanoseconds / 1000000);
-    if (time.seconds < 8640000000) {
-      return moment(timeVal).format("LT");
-    } else {
-      return moment().startOf("day").fromNow();
-    }
-  };
-
   return (
     <div className="min-w-[280px] w-[280px] px-[8px] py-[24px] border-r border-gray-50 h-screen overflow-y-scroll flex flex-col">
       <p className="px-[16px] text-size_heading6 font-semibold mb-[12px]">
@@ -47,11 +39,11 @@ export default function AllMessagesPannel({
             <div
               className={clsx(
                 "grid grid-cols-[40px_calc(100%-52px)] rounded-[8px] gap-[12px] items-center px-[16px]",
-                selectedConversation === index
+                _.isEqual(selectedConversation?.user_id, item?.user_id)
                   ? "bg-primary-50"
                   : "bg-white hover:bg-primary-25 cursor-pointer"
               )}
-              onClick={() => setSelectedConversation(index)}
+              onClick={() => setSelectedConversation(item)}
             >
               <UserAvatar
                 user={{
@@ -69,9 +61,17 @@ export default function AllMessagesPannel({
                     {getDate(item.last_updated)}
                   </p>
                 </div>
-                <p className="text-size_body2 text-gray-700 w-full truncate">
-                  {item.messages[item.messages.length - 1].message}
-                </p>
+                <div className="flex gap-[8px] items-center">
+                  <p className="text-size_body2 text-gray-700 flex-grow truncate">
+                    {item.messages[item.messages.length - 1].message}
+                  </p>
+                  {_.get(item, "total_unread") &&
+                  _.toNumber(_.get(item, "total_unread")) > 0 ? (
+                    <p className="text-size_caption2 font-semibold text-neutral_white bg-success-500 px-[8px] shadow-e1 rounded-full py-[2px]">
+                      {_.get(item, "total_unread")}
+                    </p>
+                  ) : null}
+                </div>
               </div>
             </div>
           ))}

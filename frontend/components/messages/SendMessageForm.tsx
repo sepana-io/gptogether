@@ -15,7 +15,7 @@ const validate = (values: any) => {
 
 interface SendMessageFormProps {
   sendToUser: any;
-  onSuccess?: () => void;
+  onSuccess?: (response: any) => void;
   className?: string;
   type: "verical" | "horizontal";
 }
@@ -35,10 +35,10 @@ export default function SendMessageForm({
   const onSubmit = async (values: any) => {
     setIsLoading(true);
     try {
-      await continueConversation(sendToUser, values.message);
+      const response = await continueConversation(sendToUser, values.message);
       setIsLoading(false);
       formik.values.message = "";
-      onSuccess && onSuccess();
+      onSuccess && onSuccess(response);
     } catch (error) {
       formik.setFieldError("message", _.get(error, "response.data.detail"));
       setIsLoading(false);
@@ -60,6 +60,7 @@ export default function SendMessageForm({
         placeholder="Type your message"
         {...formik.getFieldProps("message")}
         error={!!(formik.touched.message && formik.errors.message)}
+        disabled={isLoading}
       />
       {type === "horizontal" ? (
         <Button

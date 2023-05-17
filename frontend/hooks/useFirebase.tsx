@@ -1,4 +1,5 @@
 import { useAuth } from "contexts/UserContext";
+import _ from "lodash";
 import {
   doc,
   setDoc,
@@ -58,32 +59,41 @@ export const useFirebase = () => {
     type,
     status,
   }: updateMessageProps) => {
-    const prevData = (await readData(sendFrom.user_id, sendTo.user_id)) || {
-      messages: [],
-    };
-    const newMessages = [
-      ...prevData.messages,
-      {
-        type,
-        status,
-        message: message,
-        Timestamp: Timestamp.fromDate(new Date()),
-      },
-    ];
     try {
+      const prevData = (await readData(sendFrom.user_id, sendTo.user_id)) || {
+        messages: [],
+      };
+      const prevMessages =
+        status === "read"
+          ? _.map(prevData.messages, (prevMess: any) => ({
+              ...prevMess,
+              status: "read",
+            }))
+          : [...prevData.messages];
+      const newMessages = [
+        ...prevMessages,
+        {
+          type,
+          status,
+          message: message,
+          Timestamp: Timestamp.fromDate(new Date()),
+        },
+      ];
+      const total_unread: any = _.filter(newMessages, function (o) {
+        return o.status === "unread";
+      }).length;
       const userDoc = doc(firestore, sendFrom.user_id, sendTo.user_id);
-      const response = await setDoc(userDoc, {
+      const newData = {
         messages: newMessages,
         user_name: sendTo.name,
         user_id: sendTo.user_id,
         user_image: sendTo.image_url,
+        total_unread,
         last_updated: Timestamp.fromDate(new Date()),
-      });
-      console.log({ response });
-      return response;
+      };
+      const response = await setDoc(userDoc, newData);
+      return newData;
     } catch (error) {
-      console.log({ error });
-
       throw error;
     }
   };
@@ -104,11 +114,41 @@ export const useFirebase = () => {
         type: "incoming",
         status: "unread",
       });
-      return response2;
+      return response1;
     } catch (error) {
       throw error;
     }
   };
 
-  return { readData, continueConversation, getAllMessages };
+  const updateConversationToRead = async (conversationWith: any) => {
+    try {
+      const prevData = (await readData(
+        currentUser.user_id,
+        conversationWith.user_id
+      )) || {
+        messages: [],
+      };
+      const newMessages = _.map(prevData.messages, (prevMess: any) => ({
+        ...prevMess,
+        status: "read",
+      }));
+      const total_unread: any = 0;
+      const userDoc = doc(
+        firestore,
+        currentUser.user_id,
+        conversationWith.user_id
+      );
+      const newData = {
+        ...prevData,
+        messages: newMessages,
+        total_unread,
+      };
+      const response = await setDoc(userDoc, newData);
+      return newData;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return { continueConversation, getAllMessages, updateConversationToRead };
 };

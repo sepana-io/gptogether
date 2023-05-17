@@ -1,56 +1,113 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import _ from "lodash";
+import { useAuth } from "contexts/UserContext";
 import { useFirebase } from "hooks/useFirebase";
-import { useQuery } from "react-query";
-import { Text, Icon, Button, Input } from "components/atoms";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
 import Sidebar from "components/common/Sidebar";
 import AllMessagesPannel from "components/messages/AllMessagesPannel";
 import EmptyMessagesState from "components/messages/EmptyMessagesState";
 import SendMessageFooterForm from "components/messages/SendMessageFooterForm";
 import MessageConversation from "components/messages/MessageConversation";
-import { useAuth } from "contexts/UserContext";
 
 export default function Message() {
-  const { realDB, user } = useAuth();
-  const { getAllMessages } = useFirebase();
-  const [selectedConversation, setSelectedConversation] = useState<number>(0);
-  const allMessages = useQuery(["all-messages"], getAllMessages, {
-    retry: false,
-    retryOnMount: false,
-    refetchOnWindowFocus: false,
-    onSuccess: () => {
-      setSelectedConversation(0);
-    },
+  const { firestore, user } = useAuth();
+  const { updateConversationToRead } = useFirebase();
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [selectedConversation, setSelectedConversation] = useState<any>(null);
+  const [conversations, setConversations] = useState<any>({
+    isLoading: true,
+    data: [],
   });
 
-  const sendToUser = {
-    user_id: _.get(allMessages, `data[${selectedConversation}].user_id`),
-    name: _.get(allMessages, `data[${selectedConversation}].user_name`),
-    image_url: _.get(allMessages, `data[${selectedConversation}].user_image`),
+  useEffect(() => {
+    subscribeToAnyMessageChange();
+  }, [user]);
+
+  /**
+   * Subscribe to change in data and set selectedCoversations and
+   * @returns
+   */
+  const subscribeToAnyMessageChange = () => {
+    if (!user) {
+      setConversations({
+        isLoading: false,
+        data: [],
+      });
+      return;
+    }
+    const q = query(
+      collection(firestore, user?.uid),
+      orderBy("last_updated", "desc")
+    );
+    onSnapshot(q, (querySnapchot) => {
+      let ar: any = [];
+      querySnapchot.docs.forEach((doc) => {
+        ar.push(doc.data());
+      });
+      setConversations({
+        isLoading: false,
+        data: ar,
+      });
+    });
   };
+
+  const changeSelectedConversation = (value: any) => {
+    updateConversationToRead(value);
+    setSelectedConversation(value);
+  };
+
+  // 👇️ scroll to bottom every time messages change
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "auto" });
+  }, [selectedConversation]);
+
+  const currentSelectedIndex = _.findIndex(
+    conversations.data,
+    function (o: any) {
+      return o?.user_id === selectedConversation?.user_id;
+    }
+  );
 
   return (
     <div className="flex">
       <Sidebar />
-      {!allMessages.isLoading && allMessages.data.length === 0 ? (
-        <EmptyMessagesState />
+      {!conversations.isLoading && conversations.data.length === 0 ? (
+        <EmptyMessagesState
+          title="No messages yet"
+          description="When someone connects with you or you start a new chat and it will appear here."
+        />
       ) : (
         <>
           <AllMessagesPannel
-            allMessages={allMessages}
+            allMessages={conversations}
             selectedConversation={selectedConversation}
-            setSelectedConversation={setSelectedConversation}
+            setSelectedConversation={changeSelectedConversation}
           />
-          {!allMessages.isLoading && (
-            <div className="flex-grow relative">
-              <div className="h-screen overflow-scroll">
-                <MessageConversation
-                  currentConversation={allMessages.data[selectedConversation]}
+          {!conversations.isLoading && (
+            <>
+              {selectedConversation ? (
+                <div className="flex-grow relative">
+                  <div className="h-screen overflow-scroll">
+                    <MessageConversation
+                      currentConversation={
+                        conversations.data[currentSelectedIndex]
+                      }
+                    />
+                    <div ref={bottomRef} />
+                  </div>
+                  <SendMessageFooterForm
+                    selectedConversation={selectedConversation}
+                    onSuccess={changeSelectedConversation}
+                  />
+                </div>
+              ) : (
+                <EmptyMessagesState
+                  title="Connect"
+                  description="Click on the chat on the left to see entire chat"
                 />
-              </div>
-              <SendMessageFooterForm sendToUser={sendToUser} />
-            </div>
+              )}
+            </>
           )}
         </>
       )}
