@@ -16,14 +16,10 @@ import UserAvatar from "components/common/UserAvatar";
 import SendMessageModal from "components/connect/SendMessageModal";
 
 interface UserListItemProps {
-  promptDetail: any;
   userDetails: any;
 }
 
-export default function UserListItem({
-  promptDetail,
-  userDetails,
-}: UserListItemProps) {
+export default function UserListItem({ userDetails }: UserListItemProps) {
   const router = useRouter();
 
   return (
@@ -35,7 +31,7 @@ export default function UserListItem({
             <Text size="text-size_title2" weight="font-semibold">
               {userDetails?.name || userDetails?.user_id}
             </Text>
-            <Text size="text-size_body2">{promptDetail?.prompt_subject}</Text>
+            <Text size="text-size_body2">{userDetails?.interests}</Text>
           </div>
         </div>
         <div className="flex gap-[8px] flex-wrap justify-end py-[6px] w-[76px] min-w-[76px]">

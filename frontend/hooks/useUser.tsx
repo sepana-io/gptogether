@@ -106,10 +106,13 @@ export const useUser = () => {
   };
 
   interface findSimilarUsersProps {
-    radius?: string;
+    radius?: number | null;
     page?: number;
   }
-  const findSimilarUsers = async ({ radius, page }: findSimilarUsersProps) => {
+  const findSimilarUsers = async ({
+    radius,
+    page = 1,
+  }: findSimilarUsersProps) => {
     const token = await user?.getIdToken();
     const requestData = radius
       ? {
@@ -134,10 +137,13 @@ export const useUser = () => {
   };
 
   interface findNearbyUsersProps {
-    radius?: string;
-    page: number;
+    radius?: number | null;
+    page?: number;
   }
-  const findNearbyUsers = async ({ radius, page }: findNearbyUsersProps) => {
+  const findNearbyUsers = async ({
+    radius,
+    page = 1,
+  }: findNearbyUsersProps) => {
     const token = await user?.getIdToken();
     const requestData = radius
       ? {
