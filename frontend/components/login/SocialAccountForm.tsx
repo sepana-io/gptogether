@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { isEqual } from "lodash";
 
 import { Text, Input, Button } from "components/atoms";
+import LocationForm from "./LocationForm";
 
 interface SocialAccountFormProps {
   formik: any;
@@ -22,6 +23,7 @@ export default function SocialAccountForm({
         className
       )}
     >
+      <LocationForm formik={formik} initialValue={initialValue} />
       <Text size="text-size_title1" className="font-semibold mb-[8px]">
         Social Accounts
       </Text>
@@ -74,13 +76,13 @@ export default function SocialAccountForm({
         <Button
           type="submit"
           size="md"
-          className="mt-[16px] ml-auto"
+          className="mt-[40px] ml-auto w-full"
           disabled={
             isEqual(formik.values, initialValue) ||
             formik.values.openai_api_key === ""
           }
         >
-          Save
+          Update
         </Button>
       )}
     </div>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import _ from "lodash";
 import { useAuth } from "contexts/UserContext";
 
 export const useUser = () => {
@@ -104,15 +105,59 @@ export const useUser = () => {
     }
   };
 
-  const findSimilarUsers = async (prompts: any = ["What do you want?"]) => {
+  interface findSimilarUsersProps {
+    radius?: string;
+    page?: number;
+  }
+  const findSimilarUsers = async ({ radius, page }: findSimilarUsersProps) => {
     const token = await user?.getIdToken();
+    const requestData = radius
+      ? {
+          location: {
+            latitude: _.get(userDetails, "latitude"),
+            longitude: _.get(userDetails, "longitude"),
+            radius,
+            page,
+          },
+        }
+      : {};
     try {
       const response = await axios.post(
         "https://gptogether-api.sepana.io/v1/user/find_similar_users",
-        {},
+        requestData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  interface findNearbyUsersProps {
+    radius?: string;
+    page: number;
+  }
+  const findNearbyUsers = async ({ radius, page }: findNearbyUsersProps) => {
+    const token = await user?.getIdToken();
+    const requestData = radius
+      ? {
+          latitude: _.get(userDetails, "latitude"),
+          longitude: _.get(userDetails, "longitude"),
+          radius,
+          page,
+        }
+      : {
+          latitude: _.get(userDetails, "latitude"),
+          longitude: _.get(userDetails, "longitude"),
+          page,
+        };
+    try {
+      const response = await axios.post(
+        "https://gptogether-api.sepana.io/v1/user/find_nearby_users",
+        requestData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data.users;
     } catch (error) {
       throw error;
     }
@@ -126,5 +171,6 @@ export const useUser = () => {
     updateUserInfo,
     deleteUser,
     findSimilarUsers,
+    findNearbyUsers,
   };
 };

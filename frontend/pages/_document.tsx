@@ -34,6 +34,11 @@ export default function Document() {
         />
         <meta name="msapplication-TileColor" content="#00a300" />
         <meta name="theme-color" content="#ffffff" />
+        {/* Mapbox */}
+        {/* <link
+          href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"
+          rel="stylesheet"
+        /> */}
       </Head>
       <body className="font-medium antialiased">
         <Main />

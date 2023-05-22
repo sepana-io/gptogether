@@ -18,6 +18,10 @@ const initialValues = {
   youtube_channel: "",
   discord_handle: "",
   telegram_handle: "",
+  location: {
+    latitude: "-90",
+    longitude: "42",
+  },
 };
 
 const validate = (values: any) => {
@@ -66,7 +70,11 @@ export default function Onboarding() {
         }}
       />
       <ChatApiKeyForm formik={formik} />
-      <SocialAccountForm formik={formik} className="mb-[80px]" />
+      <SocialAccountForm
+        formik={formik}
+        initialValue={initialValues}
+        className="mb-[80px]"
+      />
       <div className="fixed bottom-[0] left-[0] right-[0] py-[16px] z-10 bg-neutral_white border-t border-gray-75">
         <div className="max-w-[552px] mx-auto">
           {isError && (error as any).message && (

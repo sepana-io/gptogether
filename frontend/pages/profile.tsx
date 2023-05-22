@@ -14,6 +14,7 @@ import UserDetailHeader from "components/login/UserDetailHeader";
 import ChatApiKeyForm from "components/login/ChatApiKeyForm";
 import SocialAccountForm from "components/login/SocialAccountForm";
 import DeleteAccount from "components/login/DeleteAccount";
+import LocationForm from "components/login/LocationForm";
 
 type Props = { host: string | null };
 
@@ -75,16 +76,24 @@ export default function ProfilePage({ host }: Props) {
   /**
    * Social Account Formik
    */
-  const socialAccountFormikInitialValue = {
-    twitter_handle: userDetails?.twitter_handle || "",
-    instagram_handle: userDetails?.instagram_handle || "",
-    facebook_handle: userDetails?.facebook_handle || "",
-    youtube_channel: userDetails?.youtube_channel || "",
-    discord_handle: userDetails?.discord_handle || "",
-    telegram_handle: userDetails?.telegram_handle || "",
+  const socialAccountAndLocationFormikInitialValue = {
+    twitter_handle: _.get(userDetails, "location.twitter_handle", ""),
+    instagram_handle: _.get(userDetails, "location.instagram_handle", ""),
+    facebook_handle: _.get(userDetails, "location.facebook_handle", ""),
+    youtube_channel: _.get(userDetails, "location.youtube_channel", ""),
+    discord_handle: _.get(userDetails, "location.discord_handle", ""),
+    telegram_handle: _.get(userDetails, "location.telegram_handle", ""),
+    location: {
+      longitude: _.get(userDetails, "longitude", "-90"),
+      latitude: _.get(userDetails, "latitude", "42"),
+    },
   };
-  const socialAccountFormik = useFormik({
-    initialValues: socialAccountFormikInitialValue,
+  console.log([
+    _.get(userDetails, "longitude", "-90"),
+    _.get(userDetails, "latitude", "42"),
+  ]);
+  const socialAccountAndLocationFormik = useFormik({
+    initialValues: socialAccountAndLocationFormikInitialValue,
     onSubmit,
   });
 
@@ -95,8 +104,6 @@ export default function ProfilePage({ host }: Props) {
       </div>
     );
   }
-
-  // console.log(chatApiKeyformik);
 
   return (
     <div className="flex">
@@ -164,10 +171,10 @@ export default function ProfilePage({ host }: Props) {
               initialValue={chatApiKeyInitialValue}
             />
           </form>
-          <form onSubmit={socialAccountFormik.handleSubmit}>
+          <form onSubmit={socialAccountAndLocationFormik.handleSubmit}>
             <SocialAccountForm
-              formik={socialAccountFormik}
-              initialValue={socialAccountFormikInitialValue}
+              formik={socialAccountAndLocationFormik}
+              initialValue={socialAccountAndLocationFormikInitialValue}
             />
           </form>
           <DeleteAccount />
