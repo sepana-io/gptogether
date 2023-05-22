@@ -1,31 +1,27 @@
 import React, { useState } from "react";
 import _ from "lodash";
 import { useRouter } from "next/router";
-import { useAuth } from "contexts/UserContext";
-import { useMutation, useQuery } from "react-query";
-import { useConversation } from "hooks/useConversation";
+import { useQuery } from "react-query";
 import clsx from "clsx";
-import { Avatar, Button, Input, Radio, Spinner, Text } from "components/atoms";
+import { Avatar, Spinner, Text } from "components/atoms";
 import { HiOutlineChat } from "react-icons/hi";
 import ChatContainer from "components/chat/ChatContainer";
-import Conversation from "components/chat/Conversation";
 import { useUser } from "hooks/useUser";
 import UserAvatar from "components/common/UserAvatar";
-import axios from "axios";
 
 export default function SystemUsers() {
   const router = useRouter();
   const userId: string = Array.isArray(router.query.user_id)
     ? router.query.user_id.join("")
     : (router.query.user_id as string);
-  const { findSimilarUsers, fetchUserByIDs } = useUser();
+  const { findSimilarUsers } = useUser();
   const [currentPrompt, setCurrentPrompt] = useState<string>("");
 
   const {
     data: similarPrompts,
     isLoading: similarPromptsLoading,
     isFetching: similarPromptsFetching,
-  } = useQuery("similar-users", findSimilarUsers, {
+  } = useQuery("similar-users", () => findSimilarUsers({}), {
     retryOnMount: false,
     refetchOnWindowFocus: false,
     onSuccess: (data: any) => {
