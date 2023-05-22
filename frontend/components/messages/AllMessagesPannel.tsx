@@ -47,18 +47,18 @@ export default function AllMessagesPannel({
             >
               <UserAvatar
                 user={{
-                  user_name: item.user_name,
-                  image_url: item.user_image,
+                  user_name: _.get(item, "user_name"),
+                  image_url: _.get(item, "user_image"),
                 }}
                 size="md"
               />
               <div className="flex-grow py-[12px] border-b border-gray-50">
                 <div className="flex gap-[8px] items-center">
                   <p className="flex-grow text-size_body2 font-semibold truncate">
-                    {item.user_name}
+                    {_.get(item, "user_name")}
                   </p>
                   <p className="text-size_caption2 text-gray-700">
-                    {getDate(item.last_updated)}
+                    {getDate(_.get(item, "last_updated"))}
                   </p>
                 </div>
                 <div className="flex gap-[8px] items-center">

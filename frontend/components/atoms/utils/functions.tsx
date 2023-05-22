@@ -28,10 +28,29 @@ export const filterOut = (
  * @returns string
  */
 export const getDate = (time: any) => {
-  const timeVal = new Date(time.seconds * 1000 + time.nanoseconds / 1000000);
-  if (moment(timeVal).startOf("day").fromNow() === "12 hours ago") {
-    return moment(timeVal).format("LT");
+  const now = moment();
+  const inputDate = moment(
+    new Date(time.seconds * 1000 + time.nanoseconds / 1000000)
+  );
+  const diffMinutes = now.diff(inputDate, "minutes");
+
+  if (diffMinutes < 1) {
+    return "Just now";
+  } else if (diffMinutes < 60) {
+    return diffMinutes + " minutes ago";
+  } else if (diffMinutes < 1440) {
+    // 1440 minutes in a day
+    return inputDate.fromNow();
+  } else if (diffMinutes < 10080) {
+    // 10080 minutes in a week
+    return inputDate.calendar(now, {
+      sameDay: "[Today]",
+      nextDay: "[Tomorrow]",
+      nextWeek: "dddd",
+      lastDay: "[Yesterday]",
+      lastWeek: "[Last] dddd",
+    });
   } else {
-    return moment(timeVal).startOf("day").fromNow();
+    return inputDate.format("ll");
   }
 };
