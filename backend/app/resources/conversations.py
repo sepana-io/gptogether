@@ -10,7 +10,8 @@ from app.model import (
     UserConversationFilters,
     GPTogetherConversationsUpdate,
     GPTogetherShareState,
-    GPTogetherSimilarConversation
+    GPTogetherSimilarConversation,
+    GPTogetherSimilarLocation
 )
 from utility.conversation_utils import (
     create_conversation,
@@ -121,4 +122,16 @@ async def gptogether_fetch_similar_conversations(
         meta.conversation_id, 
         user_id,
         meta.prompts
+    )
+
+
+@cache(expire=30)
+@router.post("/similar_location", status_code=status.HTTP_200_OK)
+async def gptogether_fetch_similar_location(
+    meta: GPTogetherSimilarLocation,
+    user_id: str = Depends(validate_user)
+):
+    return fetch_similar_conversations(
+        meta.location, 
+        user_id,
     )
